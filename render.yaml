@@ -1,0 +1,28 @@
+# Render Blueprint for the Spring Boot backend.
+# NOTE: Render's free managed databases are PostgreSQL only. This app uses MySQL,
+# so provision a free external MySQL (Aiven / Railway / Clever Cloud) and paste its
+# connection details into the environment variables below via the Render dashboard.
+services:
+  - type: web
+    name: ecommerce-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /swagger-ui/index.html
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DB_URL
+        sync: false   # e.g. jdbc:mysql://<host>:<port>/<db>?useSSL=true&serverTimezone=UTC
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false   # your Vercel URL, e.g. https://your-app.vercel.app

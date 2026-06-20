@@ -60,5 +60,26 @@ New users register as `CUSTOMER`. Promote to admin via SQL:
 UPDATE users SET role='ADMIN' WHERE email='you@example.com';
 ```
 
-## Deployment
-Deployable to Render / Railway / AWS EC2. The app honors the `PORT` env var.
+## Deployment (Render)
+
+This repo includes a `Dockerfile` and `render.yaml` blueprint.
+
+> **Database note:** Render's free managed databases are **PostgreSQL only**. Since this app uses MySQL, provision a free external MySQL first (e.g. [Aiven](https://aiven.io), [Railway](https://railway.app), or [Clever Cloud](https://clever-cloud.com)) and grab its JDBC URL, username, and password.
+
+### Steps
+1. Push this repo to GitHub (already done).
+2. On [Render](https://render.com): **New → Web Service** → connect this repo.
+3. Render auto-detects the `Dockerfile` (Runtime: Docker).
+4. Add the environment variables (Dashboard → Environment):
+   | Key | Example value |
+   |-----|---------------|
+   | `DB_URL` | `jdbc:mysql://host:port/dbname?useSSL=true&serverTimezone=UTC` |
+   | `DB_USERNAME` | your MySQL user |
+   | `DB_PASSWORD` | your MySQL password |
+   | `JWT_SECRET` | any long random string |
+   | `RAZORPAY_KEY_ID` | your Razorpay key id |
+   | `RAZORPAY_KEY_SECRET` | your Razorpay key secret |
+   | `CORS_ALLOWED_ORIGINS` | your Vercel URL, e.g. `https://your-app.vercel.app` |
+5. Deploy. The service listens on the `PORT` Render provides (defaults to 8080).
+
+You can also use **New → Blueprint** and point it at `render.yaml` to pre-create the service with these env var slots.
